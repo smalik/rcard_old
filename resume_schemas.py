@@ -19,14 +19,28 @@ class SocialMediaID:
         self.url        = url
         return None
 
-    def getSocial:
+    def getSocial():
         social = {self.network : {self.uname : self.url}}
         return social
+
+class VolunteerDetail:
+    def __init__(self):
+        self.org        = None
+        self.title      = None
+        self.startDt    = None
+        self.endDt      = None
+        self.url        = None
+        self.impact     = None
+        self.highlights = []
+
+    def push_highlight(self, text):
+        self.highlights.append(text)
 
 class WorkDetail:
     def __init__(self):
         self.company    = None
-        self.startDate  = None
+        self.startDt    = None
+        self.endDt      = None
         self.position   = None
         self.url        = None
         self.impact     = None
@@ -56,6 +70,28 @@ class WorkDetail:
 
     def push_skill(self, tag):
         self.skills.append(tag)
+
+class EduDetail:
+    def __init__(self):
+        self.school = None
+        self.degree = None
+        self.major  = None
+        self.startDt= None
+        self.gradDt = None
+        self.gpa    = None
+        self.courses= []
+
+    def push_course(self, course):
+        self.courses.append(course)
+
+class AwardItems:
+    def __init__(self):
+        self.title  = None
+        self.date   = None
+        self.issuer = None
+        self.desc   = None
+        self.url    = None
+        return None
 
 class Resume(MappedClass):
 
@@ -144,9 +180,9 @@ class Experience(MappedClass):
 
     items       = FieldProperty(list)
 
-class Skills:
+class Volunteer(MappedClass):
     class __mongometa__:
-        name    = 'skills'
+        name    = 'volunteer'
         session = self.session
 
     _id         = FieldProperty(schema.ObjectId)
@@ -156,5 +192,71 @@ class Skills:
 
     items       = FieldProperty(list)
 
-    def getAllSkills(self):
+class Education(MappedClass):
+    class __mongometa__:
+        name    = 'education'
+        session = self.session
+
+    _id         = FieldProperty(schema.ObjectId)
+    parent_id   = ForeignIdProperty(Resume)
+
+    parent      = RelationProperty(Resume)
+
+    items       = FieldProperty(list)
+
+class Awards(MappedClass):
+    class __mongometa__:
+        name    = 'awards'
+        session = self.session
+
+    _id         = FieldProperty(schema.ObjectId)
+    parent_id   = ForeignIdProperty(Resume)
+
+    items       = FieldProperty(list)
+
+class Publications(MappedClass):
+    class __mongometa__:
+        name    = 'publications'
+        session = self.session
+
+    _id         = FieldProperty(schema.ObjectId)
+    parent_id   = ForeignIdProperty(Resume)
+
+    items       = FieldProperty(list)
+
+class Interests(MappedClass):
+    class __mongometa__:
+        name    = 'interests'
+        session = self.session
+
+    _id         = FieldProperty(schema.ObjectId)
+    parent_id   = ForeignIdProperty(Resume)
+
+    items       = FieldProperty(list)
+
+class Languages(MappedClass):
+    class __mongometa__:
+        name    = 'languages'
+        session = self.session
+
+    _id         = FieldProperty(schema.ObjectId)
+    parent_id   = ForeignIdProperty(Resume)
+
+    items       = FieldProperty(list)
+
+class Skills(MappedClass):
+    class __mongometa__:
+        name    = 'skills'
+        session = self.session
+
+    _id         = FieldProperty(schema.ObjectId)
+    parent_id   = ForeignIdProperty(Resume)
+    exp_id      = ForeignIdProperty(Experience)
+
+    parent      = RelationProperty(Resume)
+    exp         = ForeignIdProperty(Experience)
+
+    items       = FieldProperty(list)
+
+    def getAllSkills(self, exp_id, exp):
         return None
