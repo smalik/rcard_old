@@ -9,18 +9,19 @@ from ming.odm.declarative import MappedClass
 
 bind = create_datastore('odm_tutorial')
 doc_session = Session(bind)
-sesion = ThreadLocalODMSession(doc_session=doc_session)
+session = ThreadLocalODMSession(doc_session=doc_session)
 
 
 class SocialMediaID:
-    def __init__(self, network, uname, url):
+    def __init__(self, network=None, uname=None, url=None):
         self.network    = network
         self.uname      = uname
         self.url        = url
         return None
 
-    def getSocial():
-        social = {self.network : {self.uname : self.url}}
+    def getSocial(self):
+        # social = {self.network : {self.uname : self.url}}
+        social = [self.network, self.uname, self.url]
         return social
 
 class VolunteerDetail:
@@ -93,36 +94,17 @@ class AwardItems:
         self.url    = None
         return None
 
-class Resume(MappedClass):
-
-    class __mongometa__:
-        session = session
-        name = 'resume'
-
-    _id         = FieldProperty(schema.ObjectId)
-
-    info        = RelationProperty('Personal')
-    experience  = RelationProperty('Experience')
-    volunteer   = RelationProperty('Volunteer')
-    education   = RelationProperty('Education')
-    skills      = RelationProperty('Skills')
-    awards      = RelationProperty('Awards')
-    pubs        = RelationProperty('Publications')
-    interests   = RelationProperty('Interests')
-    languages   = RelationProperty('Languages')
-
-
 class Personal(MappedClass):
     class __mongometa__:
         name    = 'personal'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty(Resume)
+    parent_id   = ForeignIdProperty('Resume')
     location_id = ForeignIdProperty('Location')
     social_id   = ForeignIdProperty('SocialProfile')
 
-    parent      = RelationProperty(Resume)
+    parent      = RelationProperty('Resume')
     location    = RelationProperty('Location')
     profiles    = RelationProperty('SocialProfile')
 
@@ -141,7 +123,7 @@ class Personal(MappedClass):
 class Location(MappedClass):
     class __mongometa__:
         name    = 'location'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
     parent_id   = ForeignIdProperty(Personal)
@@ -153,110 +135,135 @@ class Location(MappedClass):
     zipcode     = FieldProperty(str)
     city        = FieldProperty(str)
     countryUS   = FieldProperty(str)
-    region      = FeildProperty(str)
+    region      = FieldProperty(str)
 
 class SocialProfile(MappedClass):
     class __mongometa__:
         name    = 'social_profile'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
     parent_id   = ForeignIdProperty(Personal)
 
     parent      = RelationProperty(Personal)
 
-    hooks       = FieldProperty(list)
+    hooks       = FieldProperty(schema.Array(list))
 
 
 class Experience(MappedClass):
     class __mongometa__:
         name    = 'experience'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty(Resume)
+    parent_id   = ForeignIdProperty('Resume')
 
-    parent      = RelationProperty(Resume)
+    parent      = RelationProperty('Resume')
 
-    items       = FieldProperty(list)
+    items       = FieldProperty(schema.Array(str))
 
 class Volunteer(MappedClass):
     class __mongometa__:
         name    = 'volunteer'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty(Resume)
+    parent_id   = ForeignIdProperty('Resume')
 
-    parent      = RelationProperty(Resume)
+    parent      = RelationProperty('Resume')
 
-    items       = FieldProperty(list)
+    items       = FieldProperty(schema.Array(str))
 
 class Education(MappedClass):
     class __mongometa__:
         name    = 'education'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty(Resume)
+    parent_id   = ForeignIdProperty('Resume')
+    parent      = RelationProperty('Resume')
 
-    parent      = RelationProperty(Resume)
-
-    items       = FieldProperty(list)
+    items       = FieldProperty(schema.Array(str))
 
 class Awards(MappedClass):
     class __mongometa__:
         name    = 'awards'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty(Resume)
+    parent_id   = ForeignIdProperty('Resume')
+    parent      = RelationProperty('Resume')
 
-    items       = FieldProperty(list)
+    items       = FieldProperty(schema.Array(str))
 
 class Publications(MappedClass):
     class __mongometa__:
         name    = 'publications'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty(Resume)
+    parent_id   = ForeignIdProperty('Resume')
+    parent      = RelationProperty('Resume')
 
-    items       = FieldProperty(list)
+    items       = FieldProperty(schema.Array(str))
 
 class Interests(MappedClass):
     class __mongometa__:
         name    = 'interests'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty(Resume)
+    parent_id   = ForeignIdProperty('Resume')
+    parent      = RelationProperty('Resume')
 
-    items       = FieldProperty(list)
+    items       = FieldProperty(schema.Array(str))
 
 class Languages(MappedClass):
     class __mongometa__:
         name    = 'languages'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty(Resume)
+    parent_id   = ForeignIdProperty('Resume')
+    parent      = RelationProperty('Resume')
 
-    items       = FieldProperty(list)
+    items       = FieldProperty(schema.Array(str))
 
 class Skills(MappedClass):
     class __mongometa__:
         name    = 'skills'
-        session = self.session
+        session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty(Resume)
+    parent_id   = ForeignIdProperty('Resume')
     exp_id      = ForeignIdProperty(Experience)
 
-    parent      = RelationProperty(Resume)
+    parent      = RelationProperty('Resume')
     exp         = ForeignIdProperty(Experience)
 
-    items       = FieldProperty(list)
+    items       = FieldProperty(schema.Array(str))
 
     def getAllSkills(self, exp_id, exp):
         return None
+
+class Resume(MappedClass):
+
+    class __mongometa__:
+        session = session
+        name = 'resume'
+        unique_indexes = [('_id',),]
+
+    _id         = FieldProperty(schema.ObjectId)
+
+    info        = RelationProperty(Personal)
+    experience  = RelationProperty(Experience)
+    volunteer   = RelationProperty(Volunteer)
+    education   = RelationProperty(Education)
+    skills      = RelationProperty(Skills)
+    awards      = RelationProperty(Awards)
+    pubs        = RelationProperty(Publications)
+    interests   = RelationProperty(Interests)
+    languages   = RelationProperty(Languages)
+
+
+Mapper.compile_all()
