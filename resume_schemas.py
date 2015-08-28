@@ -134,7 +134,7 @@ class Location(MappedClass):
     address2    = FieldProperty(str)
     zipcode     = FieldProperty(str)
     city        = FieldProperty(str)
-    countryUS   = FieldProperty(str)
+    country   = FieldProperty(str)
     region      = FieldProperty(str)
 
 class SocialProfile(MappedClass):
@@ -255,15 +255,36 @@ class Resume(MappedClass):
 
     _id         = FieldProperty(schema.ObjectId)
 
+
+    info_id     = ForeignIdProperty(Personal)
     info        = RelationProperty(Personal)
+
+    experience_id= ForeignIdProperty(Experience)
     experience  = RelationProperty(Experience)
+
+    volunteer_id= ForeignIdProperty(Volunteer)
     volunteer   = RelationProperty(Volunteer)
+
+    education_id= ForeignIdProperty(Education)
     education   = RelationProperty(Education)
+
+    skills_id   = ForeignIdProperty(Skills)
     skills      = RelationProperty(Skills)
+
+    awards_id   = ForeignIdProperty(Awards)
     awards      = RelationProperty(Awards)
+
+    pubs_id     = ForeignIdProperty(Publications)
     pubs        = RelationProperty(Publications)
+
+    interests_id= ForeignIdProperty(Interests)
     interests   = RelationProperty(Interests)
+
+    languages_id= ForeignIdProperty(Languages)
     languages   = RelationProperty(Languages)
 
+    version     = FieldProperty(schema.Int)
+    numEdits    = FieldProperty(schema.Int)
+    editDt      = FieldProperty(schema.Array(schema.DateTime))
 
 Mapper.compile_all()
