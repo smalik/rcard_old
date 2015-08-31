@@ -100,11 +100,11 @@ class Personal(MappedClass):
         session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty('Resume')
+    parent_id   = ForeignIdProperty('Person')
     location_id = ForeignIdProperty('Location')
     social_id   = ForeignIdProperty('SocialProfile')
 
-    parent      = RelationProperty('Resume')
+    parent      = RelationProperty('Person')
     location    = RelationProperty('Location')
     profiles    = RelationProperty('SocialProfile')
 
@@ -235,10 +235,10 @@ class Skills(MappedClass):
         session = session
 
     _id         = FieldProperty(schema.ObjectId)
-    parent_id   = ForeignIdProperty('Resume')
+    parent_id   = ForeignIdProperty('Person')
     exp_id      = ForeignIdProperty(Experience)
 
-    parent      = RelationProperty('Resume')
+    parent      = RelationProperty('Person')
     exp         = ForeignIdProperty(Experience)
 
     items       = FieldProperty(schema.Array(str))
@@ -247,7 +247,6 @@ class Skills(MappedClass):
         return None
 
 class Resume(MappedClass):
-
     class __mongometa__:
         session = session
         name = 'resume'
@@ -255,9 +254,11 @@ class Resume(MappedClass):
 
     _id         = FieldProperty(schema.ObjectId)
 
+    parent_id   = ForeignIdProperty('Person')
+    parent      = RelationProperty('Person')
 
-    info_id     = ForeignIdProperty(Personal)
-    info        = RelationProperty(Personal)
+    # info_id     = ForeignIdProperty(Personal)
+    # info        = RelationProperty(Personal)
 
     experience_id= ForeignIdProperty(Experience)
     experience  = RelationProperty(Experience)
@@ -286,5 +287,26 @@ class Resume(MappedClass):
     version     = FieldProperty(schema.Int)
     numEdits    = FieldProperty(schema.Int)
     editDt      = FieldProperty(schema.Array(schema.DateTime))
+
+
+class Person(MappedClass):
+    class __mongometa__:
+        session = session
+        name = 'person'
+        unique_indexes = [('_id',),]
+
+    _id         = FieldProperty(schema.ObjectId)
+
+    info_id     = ForeignIdProperty(Personal)
+    info        = RelationProperty(Personal)
+
+    resume_ids      = FieldProperty(schema.Array(schema.ObjectId))
+    # resume_id     = ForeignIdProperty(schema.Array)
+    # resume        = RelationProperty(schema.Array(Resume))
+
+    skills_id     = ForeignIdProperty(Skills)
+    skills        = RelationProperty(Skills)
+
+    uname         = FieldProperty(str)
 
 Mapper.compile_all()
