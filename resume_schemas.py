@@ -118,7 +118,7 @@ class Personal(MappedClass):
     url         = FieldProperty(str)
     summary     = FieldProperty(str)
 
-
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
 class Location(MappedClass):
     class __mongometa__:
@@ -137,6 +137,8 @@ class Location(MappedClass):
     country   = FieldProperty(str)
     region      = FieldProperty(str)
 
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
+
 class SocialProfile(MappedClass):
     class __mongometa__:
         name    = 'social_profile'
@@ -148,6 +150,7 @@ class SocialProfile(MappedClass):
     parent      = RelationProperty(Personal)
 
     hooks       = FieldProperty(schema.Array(list))
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
 
 class Experience(MappedClass):
@@ -161,6 +164,7 @@ class Experience(MappedClass):
     parent      = RelationProperty('Resume')
 
     items       = FieldProperty(schema.Array(str))
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
 class Volunteer(MappedClass):
     class __mongometa__:
@@ -173,6 +177,7 @@ class Volunteer(MappedClass):
     parent      = RelationProperty('Resume')
 
     items       = FieldProperty(schema.Array(str))
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
 class Education(MappedClass):
     class __mongometa__:
@@ -184,6 +189,7 @@ class Education(MappedClass):
     parent      = RelationProperty('Resume')
 
     items       = FieldProperty(schema.Array(str))
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
 class Awards(MappedClass):
     class __mongometa__:
@@ -195,6 +201,7 @@ class Awards(MappedClass):
     parent      = RelationProperty('Resume')
 
     items       = FieldProperty(schema.Array(str))
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
 class Publications(MappedClass):
     class __mongometa__:
@@ -206,6 +213,7 @@ class Publications(MappedClass):
     parent      = RelationProperty('Resume')
 
     items       = FieldProperty(schema.Array(str))
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
 class Interests(MappedClass):
     class __mongometa__:
@@ -217,6 +225,7 @@ class Interests(MappedClass):
     parent      = RelationProperty('Resume')
 
     items       = FieldProperty(schema.Array(str))
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
 class Languages(MappedClass):
     class __mongometa__:
@@ -228,6 +237,7 @@ class Languages(MappedClass):
     parent      = RelationProperty('Resume')
 
     items       = FieldProperty(schema.Array(str))
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
 class Skills(MappedClass):
     class __mongometa__:
@@ -242,6 +252,7 @@ class Skills(MappedClass):
     exp         = ForeignIdProperty(Experience)
 
     items       = FieldProperty(schema.Array(str))
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
 
     def getAllSkills(self, exp_id, exp):
         return None
@@ -288,6 +299,9 @@ class Resume(MappedClass):
     numEdits    = FieldProperty(schema.Int)
     editDt      = FieldProperty(schema.Array(schema.DateTime))
 
+    # comments    = FieldProperty(Commenting)
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
+
 
 class Person(MappedClass):
     class __mongometa__:
@@ -297,16 +311,31 @@ class Person(MappedClass):
 
     _id         = FieldProperty(schema.ObjectId)
 
+    """ Identity of the person from Personal card """
     info_id     = ForeignIdProperty(Personal)
     info        = RelationProperty(Personal)
 
+    """ List of all versions of resumes """
     resume_ids      = FieldProperty(schema.Array(schema.ObjectId))
-    # resume_id     = ForeignIdProperty(schema.Array)
-    # resume        = RelationProperty(schema.Array(Resume))
 
+    """ Most recent working resume """
+    resume_id     = ForeignIdProperty(schema.Array)
+    resume        = RelationProperty(schema.Array(Resume))
+
+    uname         = FieldProperty(str)
+    comments    = FieldProperty(schema.Array(schema.ObjectId))
+
+    """ List of skills inventory """
     skills_id     = ForeignIdProperty(Skills)
     skills        = RelationProperty(Skills)
 
-    uname         = FieldProperty(str)
+    """ Get total number of skills """
+    def getSkillsCount(self):
+        return None
+
+    """ Let list of all skills """
+    def generateSkillsList(self):
+        return None
+
 
 Mapper.compile_all()
